@@ -53,4 +53,4 @@ public class RepeatedFieldValidator implements ConstraintValidator<RepeatedField
 			return false;													//불일치하면 false
 		}
 	}
-}
+} 
