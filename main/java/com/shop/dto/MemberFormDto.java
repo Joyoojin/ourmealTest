@@ -42,5 +42,5 @@ public class MemberFormDto {
     @NotEmpty(message = "전화번호는 필수 입력입니다.")                                  /**유진 추가 */
     private String memPhone;
 
-
+ 
 }
