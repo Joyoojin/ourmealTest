@@ -1,6 +1,7 @@
 package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
+import com.shop.constant.PCategory;
 import com.shop.dto.ItemFormDto;
 import com.shop.exception.OutOfStockException;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+/** (+) 지원추가 */
 @Entity
 @Table(name="item")
 @Getter
@@ -37,22 +39,37 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
+
+    //@Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PCategory pCategory;      // 상품 분류        (+)지원.추가!
+
+    // private int pDiscount;      // 할인율           (+)지원.추가!
+
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();
         this.price = itemFormDto.getPrice();
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+        this.pCategory=itemFormDto.getPCategory();      //  카테고리 변경 추가-
     }
 
+    /**
+     * 재고 감소
+     * 정지원
+     */
     public void removeStock(int stockNumber){
         int restStock = this.stockNumber - stockNumber;
         if(restStock<0){
-            throw new OutOfStockException("상품의 재고가 부족 합니다. (현재 재고 수량: " + this.stockNumber + ")");
+            throw new OutOfStockException("상품의 재고가 부족 합니다. (현재 재고 수량: " + this.stockNumber + ")");  // 재고가 부족할 경우 예외를 발생한다.
         }
         this.stockNumber = restStock;
     }
-
+    /**
+     * 재고 추가
+     * 정지원
+     */
     public void addStock(int stockNumber){
         this.stockNumber += stockNumber;
     }
