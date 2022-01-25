@@ -1,6 +1,7 @@
 package com.shop.dto;
 
 import com.shop.constant.ItemSellStatus;
+import com.shop.constant.PCategory;
 import com.shop.entity.Item;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/** (+) 지원추가 */
 @Getter @Setter
 public class ItemFormDto {
 
@@ -29,6 +31,8 @@ public class ItemFormDto {
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
+
+    private PCategory pCategory;      // 상품 분류        (+)지원.추가!
 
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
