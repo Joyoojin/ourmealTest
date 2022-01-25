@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+
+<!-- 상품 전체 조회 페이지 -->
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
@@ -49,6 +51,10 @@
                 <td>상태</td>
                 <td>등록자</td>
                 <td>등록일</td>
+                <td>상품분류</td>  <!--(+)지원 -->
+                <td>재고수량</td>  <!--(+)지원 -->
+                <th>가격</th>     <!--(+)지원 -->
+
             </tr>
             </thead>
             <tbody>
@@ -57,13 +63,46 @@
                 <td>
                     <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>
                 </td>
-                <td th:text="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td>
+                <td th:text="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td> <!-- 상태 -->
                 <td th:text="${item.createdBy}"></td>
-                <td th:text="${item.regTime}"></td>
+                <td th:text="${item.regTime}"></td>  <!-- 등록일 -->
+                <td th:text="${item.pCategory}"></td>
+                <td th:text="${item.stockNumber}"></td>
+                <td th:text="${item.price}"></td>
+
+
+                <!-- pCategory 정수값에 따라 어떤 카테고리인지 문자로 명확히 표시 // 구현 실패 .. -->   <!--(+) start -->
+                <!-- 방법1-->
+                <!--
+                <td th:if="${item.pCategory} == '반찬'" th:text="반찬"></td>
+                <td th:if="${item.pCategory} == '김치'" th:text="김치"></td>
+                <td th:if="${item.pCategory} == '국'" th:text="국"></td>
+                <td th:if="${item.pCategory} == '메인요리'" th:text="메인요리"></td>
+                <td th:if="${item.pCategory} == '간편식'" th:text="간편식"></td>
+                <td th:if="${item.pCategory} == '정육'" th:text="정육"></td>
+                <td th:if="${item.pCategory} == '식재료'" th:text="식재료"></td>
+-->
+                <!-- 방법2-->
+                <!--
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.반찬}" th:text="반찬"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.김치}" th:text="김치"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.국}" th:text="국"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.메인요리}" th:text="메인요리"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.간편식}" th:text="간편식"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.정육}" th:text="정육"></td>
+                                <td th:if="${item.pCategory == T(com.shop.constant.PCategory.식재료}" th:text="식재료"></td>
+                -->
+                <!-- 방법-->
+
+
+                <!--(+)지원  추가 부분
+                   <td> <img th:src="${item.imgUrl}" th:alt="${item.itemNm}" height="35"> </td>
+end-->
+
             </tr>
             </tbody>
         </table>
-
+        <!-- 페이징 처리 -->
         <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
             <ul class="pagination justify-content-center">
 
@@ -85,7 +124,7 @@
 
             </ul>
         </div>
-
+        <!--검색조건 -->
         <div class="form-inline justify-content-center" th:object="${itemSearchDto}">
             <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
                 <option value="all">전체기간</option>
@@ -99,10 +138,23 @@
                 <option value="SELL">판매</option>
                 <option value="SOLD_OUT">품절</option>
             </select>
+            <!-- 추가 . 카테고리 별 검색 ... 구현 안되네 -->
+            <!--
+            <select th:field="*{searchPCategory}" class="form-control" style="width:auto;">
+                <option value="">상품분류(전체)</option>
+                <option value="반찬">반찬</option>
+                <option value="김치">김치</option>
+                <option value="국">국</option>
+                <option value="메인요리">메인요리</option>
+                <option value="간편식">간편식</option>
+                <option value="정육">정육</option>
+                <option value="식재료">식재료</option>
+            </select> -->
             <select th:field="*{searchBy}" class="form-control" style="width:auto;">
                 <option value="itemNm">상품명</option>
                 <option value="createdBy">등록자</option>
             </select>
+
             <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
             <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
         </div>
