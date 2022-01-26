@@ -1,18 +1,17 @@
 package com.shop.config;
 
+import com.shop.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.shop.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 //유진( A1.시큐리티 -회원가입 비밀번호)  (C2,C9. 로그인,로그아웃)
 
@@ -45,8 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {   //WebSecuri
         ;
         //페이지 접근 권한
         http.authorizeRequests()            //시큐리티 처리에 httpServletRequest 이용
-                .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll() // permitAll 을 통해 모든 사용자가 로그인 없이 (메인페이지,회원관련url, 상품상세 페이지, 상품 이미지 불러오는 경로)등 경로로 접근 가능 설정.
-                .mvcMatchers("/admin/**").hasRole("ADMIN")      //   /admin 으로 시작하는 경로는 ADMIN Role 인 경우에만 접근 가능 설정
+
+                .mvcMatchers("/", "/members/**", "/item/**", "/images/**","/event/**").permitAll() // permitAll 을 통해 모든 사용자가 로그인 없이 (메인페이지,회원관련url, 상품상세 페이지, 상품 이미지 불러오는 경로)등 경로로 접근 가능 설정.
+                /**유진 추가.  */
+                .mvcMatchers("/admin/**","/members/adminMembers/**").hasRole("ADMIN")      //   /admin 으로 시작하는 경로는 ADMIN Role 인 경우에만 접근 가능 설정
                 .anyRequest().authenticated()      // 그외 나머지 경로는 모두 인증 요구하도록 설정.
         ;
 
@@ -68,10 +69,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {   //WebSecuri
 
     }
 
+    /** 유진 수정  "/images/**" 추가  */
     //페이지 권한
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**"); // static 디렉터리의 하위 파일은 인증을 무시하고 누구나 볼수 있도록 설정
-    }
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**","/images/**"); // static 디렉터리의 하위 파일은 인증을 무시하고 누구나 볼수 있도록 설정
+
+    }  /* 추가 !!! */
 
 }
