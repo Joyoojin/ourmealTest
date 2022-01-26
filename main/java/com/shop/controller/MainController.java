@@ -33,4 +33,9 @@ public class MainController {
         return "main"; //main.html //첫 화면인 메인페이지
     }
 
+    @GetMapping(value = "/event") //이벤트페이지
+    public String event() {
+
+        return "board/event"; //event.html
+    }
 }

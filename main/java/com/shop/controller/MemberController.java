@@ -1,19 +1,19 @@
 package com.shop.controller;
 
 import com.shop.dto.MemberFormDto;
+import com.shop.entity.Member;
 import com.shop.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.shop.entity.Member;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import org.springframework.validation.BindingResult;
 import javax.validation.Valid;
+import java.util.List;
 
 //유진( B7.회원가입 )
 //유진( B9.회원가입 )
@@ -60,5 +60,18 @@ public class MemberController {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요"); //login 실패시 에러메세지
         return "/member/memberLoginForm";
     }
+
+
+    /**회원 전체 조회 . 유진 추가 */
+    @GetMapping(value = "/adminMembers")  // 유진추가. 회원 목록 메뉴
+    public String list(Model model) {
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+
+        return "member/memberList";
+
+    }
+
+
 
 }
