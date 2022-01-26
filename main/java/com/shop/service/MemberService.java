@@ -1,15 +1,17 @@
 package com.shop.service;
 
+import com.shop.dto.MemberFormDto;
 import com.shop.entity.Member;
 import com.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 //유진( B5.회원가입 )
 //유진 (C1. 로그인, 로그아웃) : 스프링 시큐리티에서 UserDetailsService 를 구현하고 있는 클래스를 통해 로그인 기능 구현
@@ -56,4 +58,60 @@ public class MemberService implements UserDetailsService {  //UserDetailService 
                 .build();
     }
 
-}  
+
+    /*회원정보 수정 유진.추가*/
+    @Transactional
+    public Long updateMember(MemberFormDto memberFormDto) {
+        Member member = memberRepository.findByMemID(memberFormDto.getMemID());
+
+        member.updateMember(memberFormDto);
+        return member.getId();
+        }
+
+    /**유진)추가 - 관리자 회원조회  */
+    //회원 전체 조회
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
+}
+
+
+/*본인 회원 정보 조회*//*
+    @Transactional(readOnly = true)
+    public List<MemberFormDto> getMemberList(String email) {
+
+        List<MemberFormDto> memberFormDtoList = new ArrayList<>();
+
+        Member member = memberRepository.findByEmail(email);
+
+        memberFormDtoList = memberRepository.findMemberFormDtoList(member.getEmail());
+
+        return memberFormDtoList;
+    }*/
+
+
+/*    public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
+        //상품 수정
+        Item item = itemRepository.findById(itemFormDto.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        item.updateItem(itemFormDto);
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
+
+        //이미지 등록
+        for(int i=0;i<itemImgFileList.size();i++){
+            itemImgService.updateItemImg(itemImgIds.get(i),
+                    itemImgFileList.get(i));
+        }
+
+        return item.getId();
+    }
+* */
+
+/*회원 전제 조회*/
+/*
+    @Transactional(readOnly = true)
+    public Page<Member> getAdminMemberPage(MemberSearchDto memberSearchDto,Pageable pageable){
+        return memberRepository.getAdminMemberPage(memberSearchDto,pageable);
+    }
+*/
